@@ -1,5 +1,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { motion } from "framer-motion";
+import { Loader2 } from "lucide-react";
+import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
@@ -21,6 +23,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { authClient } from "@/lib/authi-client";
 
 // ✅ Schema de validação
 const registerSchema = z.object({
@@ -38,18 +41,25 @@ const registerSchema = z.object({
 
 // ✅ Componente principal
 const SignUpForm = () => {
+  const router = useRouter();
   const form = useForm<z.infer<typeof registerSchema>>({
     resolver: zodResolver(registerSchema),
-    defaultValues: {
-      name: "",
-      email: "",
-      password: "",
-    },
+    defaultValues: {},
   });
 
-  function onSubmit(values: z.infer<typeof registerSchema>) {
-    console.log(values);
-    // Aqui você pode chamar sua API de cadastro, exibir um toast, etc.
+  async function onSubmit(values: z.infer<typeof registerSchema>) {
+    await authClient.signUp.email(
+      {
+        email: values.email,
+        name: values.name,
+        password: values.password,
+      },
+      {
+        onSuccess: () => {
+          router.push("/dashboard");
+        },
+      },
+    );
   }
 
   return (
@@ -133,8 +143,13 @@ const SignUpForm = () => {
               <Button
                 type="submit"
                 className="w-full cursor-pointer bg-pink-500 transition-colors hover:bg-pink-600"
+                disabled={form.formState.isSubmitting}
               >
-                Criar Conta
+                {form.formState.isSubmitting ? (
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                ) : (
+                  "Criar Conta"
+                )}
               </Button>
             </CardFooter>
           </form>
