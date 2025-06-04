@@ -1,3 +1,5 @@
+"use client";
+
 import { zodResolver } from "@hookform/resolvers/zod";
 import { motion } from "framer-motion";
 import { useForm } from "react-hook-form";
@@ -23,8 +25,7 @@ import {
 import { Input } from "@/components/ui/input";
 
 // ✅ Schema de validação
-const registerSchema = z.object({
-  name: z.string().trim().min(1, { message: "Nome é obrigatório" }),
+const loginSchema = z.object({
   email: z
     .string()
     .trim()
@@ -36,20 +37,18 @@ const registerSchema = z.object({
     .min(8, { message: "Senha deve ter pelo menos 8 caracteres" }),
 });
 
-// ✅ Componente principal
-const SignUpForm = () => {
-  const form = useForm<z.infer<typeof registerSchema>>({
-    resolver: zodResolver(registerSchema),
+const LoginForm = () => {
+  const form = useForm<z.infer<typeof loginSchema>>({
+    resolver: zodResolver(loginSchema),
     defaultValues: {
-      name: "",
       email: "",
       password: "",
     },
   });
 
-  function onSubmit(values: z.infer<typeof registerSchema>) {
+  function onSubmit(values: z.infer<typeof loginSchema>) {
     console.log(values);
-    // Aqui você pode chamar sua API de cadastro, exibir um toast, etc.
+    // Aqui você pode chamar sua API de autenticação, redirecionar, etc.
   }
 
   return (
@@ -65,32 +64,15 @@ const SignUpForm = () => {
             className="space-y-4 p-4"
           >
             <CardHeader className="text-center">
-              <CardTitle className="text-2xl font-bold">Criar Conta</CardTitle>
+              <CardTitle className="text-2xl font-bold">Login</CardTitle>
               <CardDescription className="text-muted-foreground font-medium">
-                Comece a usar o{" "}
+                Entre no{" "}
                 <span className="font-extrabold text-pink-500">SalãoPLUS</span>{" "}
-                hoje mesmo!
+                e aproveite!
               </CardDescription>
             </CardHeader>
 
             <CardContent className="space-y-4">
-              <FormField
-                control={form.control}
-                name="name"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Nome</FormLabel>
-                    <FormControl>
-                      <Input
-                        placeholder="Digite seu nome completo"
-                        autoComplete="name"
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
               <FormField
                 control={form.control}
                 name="email"
@@ -100,7 +82,7 @@ const SignUpForm = () => {
                     <FormControl>
                       <Input
                         type="email"
-                        placeholder="exemplo@email.com"
+                        placeholder="seu@email.com"
                         autoComplete="email"
                         {...field}
                       />
@@ -118,8 +100,8 @@ const SignUpForm = () => {
                     <FormControl>
                       <Input
                         type="password"
-                        placeholder="Crie uma senha segura"
-                        autoComplete="new-password"
+                        placeholder="Digite sua senha"
+                        autoComplete="current-password"
                         {...field}
                       />
                     </FormControl>
@@ -134,7 +116,7 @@ const SignUpForm = () => {
                 type="submit"
                 className="w-full cursor-pointer bg-pink-500 transition-colors hover:bg-pink-600"
               >
-                Criar Conta
+                Entrar
               </Button>
             </CardFooter>
           </form>
@@ -144,4 +126,4 @@ const SignUpForm = () => {
   );
 };
 
-export default SignUpForm;
+export default LoginForm;
