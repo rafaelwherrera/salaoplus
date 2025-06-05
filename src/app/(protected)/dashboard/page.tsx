@@ -1,9 +1,6 @@
-import { eq } from "drizzle-orm";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 
-import { db } from "@/db";
-import { usersToSalonsTable } from "@/db/schema";
 import { auth } from "@/lib/auth";
 
 import SignOutButton from "./_components/sign-out-button";
@@ -16,11 +13,8 @@ const Dashboard = async () => {
   if (!session?.user) {
     redirect("/login");
   }
-  const salons = await db.query.usersToSalonsTable.findMany({
-    where: eq(usersToSalonsTable.userId, session.user.id),
-  });
 
-  if (salons.length === 0) {
+  if (!session.user.salon) {
     redirect("/salons-form");
   }
 
