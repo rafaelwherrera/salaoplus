@@ -7,7 +7,6 @@ import {
   text,
   time,
   timestamp,
-  uuid,
 } from "drizzle-orm/pg-core";
 
 // Usuários do sistema
@@ -33,8 +32,16 @@ export const usersTableRelations = relations(usersTable, ({ many }) => ({
 
 // Salões
 export const salonsTable = pgTable("salons", {
-  id: uuid("id").defaultRandom().primaryKey(),
+  id: text("id").primaryKey(),
   name: text("name").notNull(),
+  street: text("street").notNull(), // Rua
+  number: text("number").notNull(), // Número (text para aceitar "s/n" ou letras)
+  complement: text("complement"), // Complemento (opcional)
+  neighborhood: text("neighborhood").notNull(), // Bairro
+  city: text("city").notNull(), // Cidade
+  state: text("state").notNull(), // Estado
+  zipCode: text("zip_code").notNull(), // CEP
+  phone: text("phone").notNull(), // Telefone
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at")
     .defaultNow()
@@ -52,10 +59,10 @@ export const salonsTableRelations = relations(salonsTable, ({ many }) => ({
 export const usersToSalonsTable = pgTable("users_to_salons", {
   userId: text("user_id")
     .notNull()
-    .references(() => usersTable.id),
-  salonId: uuid("salon_id")
+    .references(() => usersTable.id, { onDelete: "cascade" }),
+  salonId: text("salon_id")
     .notNull()
-    .references(() => salonsTable.id),
+    .references(() => salonsTable.id, { onDelete: "cascade" }),
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at")
     .defaultNow()
@@ -122,8 +129,8 @@ export const verificationTable = pgTable("verifications", {
 
 // Profissionais (cabeleireiros, manicures, etc)
 export const professionalsTable = pgTable("professionals", {
-  id: uuid("id").defaultRandom().primaryKey(),
-  salonId: uuid("salon_id")
+  id: text("id").primaryKey(),
+  salonId: text("salon_id")
     .notNull()
     .references(() => salonsTable.id, { onDelete: "cascade" }),
   name: text("name").notNull(),
@@ -156,8 +163,8 @@ export const clientSexEnum = pgEnum("client_sex", ["male", "female"]);
 
 // Clientes do salão
 export const clientsTable = pgTable("clients", {
-  id: uuid("id").defaultRandom().primaryKey(),
-  salonId: uuid("salon_id")
+  id: text("id").primaryKey(),
+  salonId: text("salon_id")
     .notNull()
     .references(() => salonsTable.id, { onDelete: "cascade" }),
   name: text("name").notNull(),
@@ -183,15 +190,15 @@ export const clientsTableRelations = relations(
 
 // Agendamentos
 export const appointmentsTable = pgTable("appointments", {
-  id: uuid("id").defaultRandom().primaryKey(),
+  id: text("id").primaryKey(),
   date: timestamp("date").notNull(),
-  salonId: uuid("salon_id")
+  salonId: text("salon_id")
     .notNull()
     .references(() => salonsTable.id, { onDelete: "cascade" }),
-  clientId: uuid("client_id")
+  clientId: text("client_id")
     .notNull()
     .references(() => clientsTable.id, { onDelete: "cascade" }),
-  professionalId: uuid("professional_id")
+  professionalId: text("professional_id")
     .notNull()
     .references(() => professionalsTable.id, { onDelete: "cascade" }),
   createdAt: timestamp("created_at").defaultNow().notNull(),

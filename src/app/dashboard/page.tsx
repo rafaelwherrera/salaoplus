@@ -1,7 +1,9 @@
+import { eq } from "drizzle-orm";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
-import { toast } from "sonner";
 
+import { db } from "@/db";
+import { usersToSalonsTable } from "@/db/schema";
 import { auth } from "@/lib/auth";
 
 import SignOutButton from "./components/sign-out-button";
@@ -13,7 +15,13 @@ const Dashboard = async () => {
 
   if (!session?.user) {
     redirect("/login");
-    toast.error("Você precisa estar logado para acessar esta página");
+  }
+  const salons = await db.query.usersToSalonsTable.findMany({
+    where: eq(usersToSalonsTable.userId, session.user.id),
+  });
+
+  if (salons.length === 0) {
+    redirect("/salons-form");
   }
 
   return (
