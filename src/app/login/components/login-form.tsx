@@ -2,7 +2,10 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { motion } from "framer-motion";
+import { Loader2 } from "lucide-react";
+import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 import { z } from "zod";
 
 import { Button } from "@/components/ui/button";
@@ -23,6 +26,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { authClient } from "@/lib/authi-client";
 
 // ✅ Schema de validação
 const loginSchema = z.object({
@@ -38,6 +42,7 @@ const loginSchema = z.object({
 });
 
 const LoginForm = () => {
+  const router = useRouter();
   const form = useForm<z.infer<typeof loginSchema>>({
     resolver: zodResolver(loginSchema),
     defaultValues: {
@@ -46,9 +51,23 @@ const LoginForm = () => {
     },
   });
 
-  function onSubmit(values: z.infer<typeof loginSchema>) {
-    console.log(values);
-    // Aqui você pode chamar sua API de autenticação, redirecionar, etc.
+  async function onSubmit(values: z.infer<typeof loginSchema>) {
+    await authClient.signIn.email(
+      {
+        email: values.email,
+        password: values.password,
+      },
+      {
+        onSuccess: () => {
+          router.push("/dashboard");
+          toast.success("Login realizado com sucesso");
+        },
+        onError: (error) => {
+          console.log(error);
+          toast.error("Email ou senha inválidos");
+        },
+      },
+    );
   }
 
   return (
@@ -115,8 +134,13 @@ const LoginForm = () => {
               <Button
                 type="submit"
                 className="w-full cursor-pointer bg-pink-500 transition-colors hover:bg-pink-600"
+                disabled={form.formState.isSubmitting}
               >
-                Entrar
+                {form.formState.isSubmitting ? (
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                ) : (
+                  "Entrar"
+                )}
               </Button>
             </CardFooter>
           </form>

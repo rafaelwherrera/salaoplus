@@ -17,10 +17,10 @@ export const auth = betterAuth({
     modelName: "sessionsTable",
   },
   account: {
-    modelName: "accountsTable",
+    modelName: "accountTable",
   },
   verification: {
-    modelName: "verificationsTable",
+    modelName: "verificationTable",
   },
   emailAndPassword: {
     enabled: true,
