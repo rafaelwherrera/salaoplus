@@ -1,8 +1,6 @@
-import { Plus } from "lucide-react";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 
-import { Button } from "@/components/ui/button";
 import {
   PageActions,
   PageContainer,
@@ -13,6 +11,8 @@ import {
   PageTitle,
 } from "@/components/ui/page-container";
 import { auth } from "@/lib/auth";
+
+import AddProfissionalButton from "../_components/add-profissional-button";
 
 const Profissionais = async () => {
   const session = await auth.api.getSession({
@@ -34,10 +34,7 @@ const Profissionais = async () => {
           </PageDescription>
         </PageHeaderContent>
         <PageActions>
-          <Button className="cursor-pointer">
-            <Plus />
-            Adicionar Profissional
-          </Button>
+          <AddProfissionalButton />
         </PageActions>
       </PageHeader>
       <PageContent>
