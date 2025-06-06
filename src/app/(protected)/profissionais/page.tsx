@@ -1,3 +1,4 @@
+import { eq } from "drizzle-orm";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 
@@ -10,9 +11,12 @@ import {
   PageHeaderContent,
   PageTitle,
 } from "@/components/ui/page-container";
+import { db } from "@/db";
+import { professionalsTable } from "@/db/schema";
 import { auth } from "@/lib/auth";
 
 import AddProfissionalButton from "../_components/add-profissional-button";
+import ProfissionalCard from "../_components/profissional-card";
 
 const Profissionais = async () => {
   const session = await auth.api.getSession({
@@ -24,6 +28,11 @@ const Profissionais = async () => {
   if (!session.user.salon) {
     redirect("/salons-form");
   }
+
+  const profissionais = await db.query.professionalsTable.findMany({
+    where: eq(professionalsTable.salonId, session.user.salon.id),
+  });
+
   return (
     <PageContainer>
       <PageHeader>
@@ -38,7 +47,14 @@ const Profissionais = async () => {
         </PageActions>
       </PageHeader>
       <PageContent>
-        <h1>Profissionais</h1>
+        <div className="grid grid-cols-3 gap-6">
+          {profissionais.map((profissional) => (
+            <ProfissionalCard
+              key={profissional.id}
+              profissional={profissional}
+            />
+          ))}
+        </div>
       </PageContent>
     </PageContainer>
   );
