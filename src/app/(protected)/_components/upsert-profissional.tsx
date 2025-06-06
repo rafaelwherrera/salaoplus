@@ -47,10 +47,10 @@ const formSchema = z
       .min(1, { message: "Preço do agendamento é obrigatório" }),
     availableFromWeekDay: z
       .string()
-      .min(0, { message: "Dia da semana de início é obrigatório" }),
+      .min(1, { message: "Dia da semana de início é obrigatório" }),
     availableToWeekDay: z
       .string()
-      .min(0, { message: "Dia da semana de término é obrigatório" }),
+      .min(1, { message: "Dia da semana de término é obrigatório" }),
     availableFromTime: z
       .string()
       .min(1, { message: "Horário de início é obrigatório" }),
@@ -85,7 +85,9 @@ const UpsertProfissional = ({
       name: professional?.name ?? "",
       phone: professional?.phone ?? "",
       speciality: professional?.specialty ?? "",
-      appointmentPriceInCents: professional?.appointmentPriceInCents ?? 0,
+      appointmentPriceInCents: professional?.appointmentPriceInCents
+        ? professional.appointmentPriceInCents / 100
+        : 1,
       availableFromWeekDay:
         professional?.availableFromWeekDay?.toString() ?? "1",
       availableToWeekDay: professional?.availableToWeekDay?.toString() ?? "5",
@@ -93,30 +95,16 @@ const UpsertProfissional = ({
       availableToTime: professional?.availableToTime ?? "",
     },
   });
-
   const upsertProfissionalAction = useAction(upsertProfissional, {
     onSuccess: () => {
-      toast.success("Profissional adicionado com sucesso");
+      toast.success("Profissional adicionado com sucesso.");
       onSuccess?.();
     },
-    onError: () => {
-      toast.error("Erro ao adicionar profissional");
+    onError: (error) => {
+      console.error(error);
+      toast.error("Erro ao adicionar profissional.");
     },
   });
-
-  // useEffect(() => {
-  //   form.reset({
-  //     name: professional?.name ?? "",
-  //     phone: professional?.phone ?? "",
-  //     speciality: professional?.specialty ?? "",
-  //     appointmentPriceInCents: professional?.appointmentPriceInCents ?? 0,
-  //     availableFromWeekDay:
-  //       professional?.availableFromWeekDay?.toString() ?? "1",
-  //     availableToWeekDay: professional?.availableToWeekDay?.toString() ?? "5",
-  //     availableFromTime: professional?.availableFromTime ?? "",
-  //     availableToTime: professional?.availableToTime ?? "",
-  //   });
-  // }, [professional, form]);
 
   const onSubmit = (values: z.infer<typeof formSchema>) => {
     upsertProfissionalAction.execute({
@@ -131,16 +119,17 @@ const UpsertProfissional = ({
   return (
     <DialogContent>
       <DialogHeader>
-        <DialogTitle>Adicionar Profissional</DialogTitle>
+        <DialogTitle>
+          {professional ? professional.name : "Adicionar profissional"}
+        </DialogTitle>
         <DialogDescription>
-          Adicione um novo profissional ao seu salão
+          {professional
+            ? "Edite as informações desse profissional."
+            : "Adicione um novo profissional ao seu salão."}
         </DialogDescription>
       </DialogHeader>
       <Form {...form}>
-        <form
-          onSubmit={form.handleSubmit(onSubmit)}
-          className="space-y-6 rounded-2xl bg-white p-4 shadow-md"
-        >
+        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
           {/* DADOS PESSOAIS */}
           <div className="grid gap-4 md:grid-cols-2">
             <FormField
@@ -444,13 +433,15 @@ const UpsertProfissional = ({
           {/* BOTÃO */}
           <DialogFooter className="pt-4">
             <Button
-              disabled={upsertProfissionalAction.isPending}
               type="submit"
+              disabled={upsertProfissionalAction.isPending}
               className="w-full cursor-pointer rounded-xl py-6 text-base"
             >
               {upsertProfissionalAction.isPending
-                ? "Adicionando profissional..."
-                : "Adicionar profissional"}
+                ? "Salvando..."
+                : professional
+                  ? "Salvar"
+                  : "Adicionar Profissional"}
             </Button>
           </DialogFooter>
         </form>
