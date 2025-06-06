@@ -6,7 +6,7 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogTrigger } from "@/components/ui/dialog";
 
-import UpserProfissional from "./upsert-profissional";
+import UpsertProfissional from "./upsert-profissional";
 
 const AddProfissionalButton = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -18,7 +18,7 @@ const AddProfissionalButton = () => {
           Adicionar Profissional
         </Button>
       </DialogTrigger>
-      <UpserProfissional onSuccess={() => setIsOpen(false)} />
+      <UpsertProfissional onSuccess={() => setIsOpen(false)} />
     </Dialog>
   );
 };

@@ -32,11 +32,11 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { professionalsTable } from "@/db/schema";
 
-const schema = z
+const formSchema = z
   .object({
     name: z.string().trim().min(1, { message: "Nome é obrigatório" }),
-    email: z.string().email({ message: "Email inválido" }),
     phone: z.string().trim().min(1, { message: "Telefone é obrigatório" }),
     speciality: z
       .string()
@@ -70,22 +70,27 @@ const schema = z
   );
 
 interface UpsertProfissionalProps {
+  professional?: typeof professionalsTable.$inferSelect;
   onSuccess?: () => void;
 }
 
-const UpserProfissional = ({ onSuccess }: UpsertProfissionalProps) => {
-  const form = useForm<z.infer<typeof schema>>({
-    resolver: zodResolver(schema),
+const UpsertProfissional = ({
+  professional,
+  onSuccess,
+}: UpsertProfissionalProps) => {
+  const form = useForm<z.infer<typeof formSchema>>({
+    shouldUnregister: true,
+    resolver: zodResolver(formSchema),
     defaultValues: {
-      name: "",
-      email: "",
-      phone: "",
-      speciality: "",
-      appointmentPriceInCents: 0,
-      availableFromWeekDay: "1",
-      availableToWeekDay: "5",
-      availableFromTime: "",
-      availableToTime: "",
+      name: professional?.name ?? "",
+      phone: professional?.phone ?? "",
+      speciality: professional?.specialty ?? "",
+      appointmentPriceInCents: professional?.appointmentPriceInCents ?? 0,
+      availableFromWeekDay:
+        professional?.availableFromWeekDay?.toString() ?? "1",
+      availableToWeekDay: professional?.availableToWeekDay?.toString() ?? "5",
+      availableFromTime: professional?.availableFromTime ?? "",
+      availableToTime: professional?.availableToTime ?? "",
     },
   });
 
@@ -99,9 +104,24 @@ const UpserProfissional = ({ onSuccess }: UpsertProfissionalProps) => {
     },
   });
 
-  const onSubmit = (values: z.infer<typeof schema>) => {
+  // useEffect(() => {
+  //   form.reset({
+  //     name: professional?.name ?? "",
+  //     phone: professional?.phone ?? "",
+  //     speciality: professional?.specialty ?? "",
+  //     appointmentPriceInCents: professional?.appointmentPriceInCents ?? 0,
+  //     availableFromWeekDay:
+  //       professional?.availableFromWeekDay?.toString() ?? "1",
+  //     availableToWeekDay: professional?.availableToWeekDay?.toString() ?? "5",
+  //     availableFromTime: professional?.availableFromTime ?? "",
+  //     availableToTime: professional?.availableToTime ?? "",
+  //   });
+  // }, [professional, form]);
+
+  const onSubmit = (values: z.infer<typeof formSchema>) => {
     upsertProfissionalAction.execute({
       ...values,
+      id: professional?.id,
       availableFromWeekDay: parseInt(values.availableFromWeekDay),
       availableToWeekDay: parseInt(values.availableToWeekDay),
       appointmentPriceInCents: values.appointmentPriceInCents * 100,
@@ -129,19 +149,6 @@ const UpserProfissional = ({ onSuccess }: UpsertProfissionalProps) => {
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Nome</FormLabel>
-                  <FormControl>
-                    <Input {...field} className="rounded-xl" />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="email"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Email</FormLabel>
                   <FormControl>
                     <Input {...field} className="rounded-xl" />
                   </FormControl>
@@ -452,4 +459,4 @@ const UpserProfissional = ({ onSuccess }: UpsertProfissionalProps) => {
   );
 };
 
-export default UpserProfissional;
+export default UpsertProfissional;

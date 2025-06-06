@@ -4,7 +4,6 @@ export const upsertProfissionalSchema = z
   .object({
     id: z.string().uuid().optional(),
     name: z.string().trim().min(1, { message: "Nome é obrigatório" }),
-    email: z.string().email({ message: "Email inválido" }),
     phone: z.string().trim().min(1, { message: "Telefone é obrigatório" }),
     speciality: z
       .string()
