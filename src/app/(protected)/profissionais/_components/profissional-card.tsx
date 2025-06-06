@@ -4,7 +4,6 @@ import {
   CalendarIcon,
   ClockIcon,
   DollarSignIcon,
-  PencilIcon,
   TrashIcon,
 } from "lucide-react";
 import { useAction } from "next-safe-action/hooks";
@@ -37,8 +36,8 @@ import { Separator } from "@/components/ui/separator";
 import { professionalsTable } from "@/db/schema";
 import { formatCurrencyInCents } from "@/helpers/currency";
 
-import UpsertProfissional from "../_components/upsert-profissional";
-import { getAvailability } from "../profissionais/_helpers/availability";
+import { getAvailability } from "../_helpers/availability";
+import UpsertProfissional from "./upsert-profissional";
 
 interface ProfissionalCardProps {
   profissional: typeof professionalsTable.$inferSelect;
@@ -98,19 +97,13 @@ const ProfissionalCard = ({ profissional }: ProfissionalCardProps) => {
         </Badge>
       </CardContent>
       <Separator />
-      <CardFooter>
+      <CardFooter className="flex flex-col gap-2">
         <Dialog
           open={isUpsertProfissionalDialogOpen}
           onOpenChange={setIsUpsertProfissionalDialogOpen}
         >
           <DialogTrigger asChild>
-            <Button
-              variant="outline"
-              className="w-full cursor-pointer bg-pink-500 text-white transition-colors hover:bg-pink-600 hover:text-white"
-            >
-              <PencilIcon className="mr-1" />
-              Ver Detalhes
-            </Button>
+            <Button className="w-full cursor-pointer">Ver detalhes</Button>
           </DialogTrigger>
           <UpsertProfissional
             professional={{
@@ -119,11 +112,12 @@ const ProfissionalCard = ({ profissional }: ProfissionalCardProps) => {
               availableToTime: availability.to.format("HH:mm:ss"),
             }}
             onSuccess={() => setIsUpsertProfissionalDialogOpen(false)}
+            isOpen={isUpsertProfissionalDialogOpen}
           />
         </Dialog>
         <AlertDialog>
           <AlertDialogTrigger asChild>
-            <Button variant="outline" className="w-full">
+            <Button variant="outline" className="w-full cursor-pointer">
               <TrashIcon />
               Deletar profissional
             </Button>
@@ -139,8 +133,13 @@ const ProfissionalCard = ({ profissional }: ProfissionalCardProps) => {
               </AlertDialogDescription>
             </AlertDialogHeader>
             <AlertDialogFooter>
-              <AlertDialogCancel>Cancelar</AlertDialogCancel>
-              <AlertDialogAction onClick={handleDeleteProfissionalClick}>
+              <AlertDialogCancel className="cursor-pointer">
+                Cancelar
+              </AlertDialogCancel>
+              <AlertDialogAction
+                className="cursor-pointer"
+                onClick={handleDeleteProfissionalClick}
+              >
                 Deletar
               </AlertDialogAction>
             </AlertDialogFooter>

@@ -15,8 +15,8 @@ import { db } from "@/db";
 import { professionalsTable } from "@/db/schema";
 import { auth } from "@/lib/auth";
 
-import AddProfissionalButton from "../_components/add-profissional-button";
-import ProfissionalCard from "../_components/profissional-card";
+import AddProfissionalButton from "./_components/add-profissional-button";
+import ProfissionalCard from "./_components/profissional-card";
 
 const Profissionais = async () => {
   const session = await auth.api.getSession({
