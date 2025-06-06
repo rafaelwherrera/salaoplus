@@ -100,12 +100,7 @@ export function UpsertClienteForm({ initialData, onSuccess }: Props) {
             <FormItem>
               <FormLabel>Telefone</FormLabel>
               <FormControl>
-                <Input
-                  as={IMaskInput}
-                  mask="(00) 00000-0000"
-                  {...field}
-                  placeholder="(00) 00000-0000"
-                />
+                <IMaskInput mask="(00) 00000-0000" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
