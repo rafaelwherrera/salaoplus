@@ -1,5 +1,7 @@
 "use server";
 
+import { randomUUID } from "node:crypto";
+
 import { revalidatePath } from "next/cache";
 import { headers } from "next/headers";
 
@@ -17,23 +19,31 @@ export const upsertClient = actionClient
       headers: await headers(),
     });
     if (!session?.user) {
-      throw new Error("Unauthorized");
+      throw new Error("Usuário não encontrado");
     }
     if (!session?.user.salon?.id) {
-      throw new Error("Salon not found");
+      throw new Error("Salão não encontrado");
     }
+
+    const clientId = parsedInput.id ?? randomUUID();
 
     await db
       .insert(clientsTable)
       .values({
-        ...parsedInput,
-        id: parsedInput.id ?? "",
-        salonId: session?.user.salon?.id,
+        id: clientId,
+        name: parsedInput.name,
+        email: parsedInput.email,
+        phoneNumber: parsedInput.phoneNumber,
+        sex: parsedInput.sex,
+        salonId: session.user.salon.id,
       })
       .onConflictDoUpdate({
         target: [clientsTable.id],
         set: {
-          ...parsedInput,
+          name: parsedInput.name,
+          email: parsedInput.email,
+          phoneNumber: parsedInput.phoneNumber,
+          sex: parsedInput.sex,
         },
       });
     revalidatePath("/clientes");

@@ -5,7 +5,8 @@ import { useState } from "react";
 
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogTrigger } from "@/components/ui/dialog";
-import { UpsertClienteForm } from "@/components/UpsertClienteForm";
+
+import UpsertClienteForm from "./upsert-cliente-form";
 
 const AddClienteButton = () => {
   const [isOpen, setIsOpen] = useState(false);

@@ -2,7 +2,6 @@ import { eq } from "drizzle-orm";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 
-import { AddClienteButton } from "@/components/AddClienteButton";
 import { DataTable } from "@/components/ui/data-table";
 import {
   PageActions,
@@ -17,6 +16,7 @@ import { db } from "@/db";
 import { clientsTable } from "@/db/schema";
 import { auth } from "@/lib/auth";
 
+import AddClienteButton from "./_components/add-cliente-button";
 import { clientsTableColumns } from "./_components/table-columns";
 
 const ClientesPage = async () => {
@@ -37,7 +37,7 @@ const ClientesPage = async () => {
       <PageHeader>
         <PageHeaderContent>
           <PageTitle>Clientes</PageTitle>
-          <PageDescription>Gerencie os clientes da sua clínica</PageDescription>
+          <PageDescription>Gerencie os clientes da seu salão</PageDescription>
         </PageHeaderContent>
         <PageActions>
           <AddClienteButton />

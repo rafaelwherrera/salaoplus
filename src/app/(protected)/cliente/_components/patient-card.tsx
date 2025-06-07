@@ -14,8 +14,9 @@ import {
 } from "@/components/ui/card";
 import { Dialog, DialogTrigger } from "@/components/ui/dialog";
 import { Separator } from "@/components/ui/separator";
-import { UpsertClienteForm } from "@/components/UpsertClienteForm";
 import { clientsTable } from "@/db/schema";
+
+import UpsertClienteForm from "./upsert-cliente-form";
 
 interface ClientCardProps {
   client: typeof clientsTable.$inferSelect;

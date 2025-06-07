@@ -52,7 +52,7 @@ const items = [
   },
   {
     title: "Clientes",
-    url: "/clientes",
+    url: "/cliente",
     icon: Users,
   },
   {

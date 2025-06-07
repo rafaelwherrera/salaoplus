@@ -2,6 +2,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useAction } from "next-safe-action/hooks";
 import { useForm } from "react-hook-form";
 import { NumericFormat } from "react-number-format";
+import { PatternFormat } from "react-number-format";
 import { toast } from "sonner";
 import { z } from "zod";
 
@@ -139,7 +140,11 @@ const UpsertProfissional = ({
                 <FormItem>
                   <FormLabel>Nome</FormLabel>
                   <FormControl>
-                    <Input {...field} className="rounded-xl" />
+                    <Input
+                      {...field}
+                      className="rounded-xl"
+                      placeholder="Nome"
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -152,7 +157,16 @@ const UpsertProfissional = ({
                 <FormItem>
                   <FormLabel>Telefone</FormLabel>
                   <FormControl>
-                    <Input {...field} className="rounded-xl" />
+                    <PatternFormat
+                      format="(##) #####-####"
+                      mask="_"
+                      placeholder="(11) 99999-9999"
+                      value={field.value}
+                      onValueChange={(value) => {
+                        field.onChange(value.value);
+                      }}
+                      customInput={Input}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -165,7 +179,11 @@ const UpsertProfissional = ({
                 <FormItem>
                   <FormLabel>Especialidade</FormLabel>
                   <FormControl>
-                    <Input {...field} className="rounded-xl" />
+                    <Input
+                      {...field}
+                      className="rounded-xl"
+                      placeholder="Especialidade"
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>

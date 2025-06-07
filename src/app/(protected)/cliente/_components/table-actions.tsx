@@ -25,8 +25,9 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { UpsertClienteForm } from "@/components/UpsertClienteForm";
 import { clientsTable } from "@/db/schema";
+
+import UpsertClienteForm from "./upsert-cliente-form";
 
 interface ClienteTableActionsProps {
   client: typeof clientsTable.$inferSelect;
