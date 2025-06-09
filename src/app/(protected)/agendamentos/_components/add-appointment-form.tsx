@@ -168,7 +168,7 @@ const UpsertAppointmentForm = ({
     <DialogContent className="sm:max-w-[500px]">
       <DialogHeader>
         <DialogTitle>
-          {isEdit ? "Editar agendamento" : "Novo agendamento"}
+          {isEdit ? "Editar Agendamento" : "Novo Agendamento"}
         </DialogTitle>
         <DialogDescription>
           {isEdit
@@ -185,14 +185,14 @@ const UpsertAppointmentForm = ({
             name="clientId"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Paciente</FormLabel>
+                <FormLabel>Cliente</FormLabel>
                 <Select
                   onValueChange={field.onChange}
                   defaultValue={field.value}
                 >
                   <FormControl>
                     <SelectTrigger className="w-full">
-                      <SelectValue placeholder="Selecione um paciente" />
+                      <SelectValue placeholder="Selecione um cliente" />
                     </SelectTrigger>
                   </FormControl>
                   <SelectContent>
@@ -213,14 +213,14 @@ const UpsertAppointmentForm = ({
             name="professionalId"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Médico</FormLabel>
+                <FormLabel>Profissional</FormLabel>
                 <Select
                   onValueChange={field.onChange}
                   defaultValue={field.value}
                 >
                   <FormControl>
                     <SelectTrigger className="w-full">
-                      <SelectValue placeholder="Selecione um médico" />
+                      <SelectValue placeholder="Selecione um profissional" />
                     </SelectTrigger>
                   </FormControl>
                   <SelectContent>
@@ -241,7 +241,7 @@ const UpsertAppointmentForm = ({
             name="appointmentPrice"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Valor da consulta</FormLabel>
+                <FormLabel>Valor do Serviço</FormLabel>
                 <NumericFormat
                   value={field.value}
                   onValueChange={(value) => {
@@ -339,15 +339,23 @@ const UpsertAppointmentForm = ({
 
           <DialogFooter className="flex gap-2">
             {isEdit && (
-              <Button type="button" variant="destructive">
+              <Button
+                className="cursor-pointer"
+                type="button"
+                variant="destructive"
+              >
                 <Trash2 className="mr-2 h-4 w-4" />
                 Deletar
               </Button>
             )}
-            <Button type="submit" disabled={createAppointmentAction.isPending}>
+            <Button
+              className="cursor-pointer"
+              type="submit"
+              disabled={createAppointmentAction.isPending}
+            >
               {createAppointmentAction.isPending
                 ? "Criando..."
-                : "Criar agendamento"}
+                : "Criar Agendamento"}
             </Button>
           </DialogFooter>
         </form>

@@ -89,14 +89,14 @@ const AgendamentosTableActions = ({
       <DropdownMenuContent className="w-56" align="start">
         <DropdownMenuLabel>Preferências</DropdownMenuLabel>
         <DropdownMenuSeparator />
-        <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+        {/* <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
           <DialogTrigger asChild>
             <DropdownMenuItem className="cursor-pointer">
               <PencilIcon />
               Editar
             </DropdownMenuItem>
           </DialogTrigger>
-        </Dialog>
+        </Dialog> */}
         <AlertDialog>
           <AlertDialogTrigger asChild>
             <DropdownMenuItem
@@ -118,8 +118,13 @@ const AgendamentosTableActions = ({
               </AlertDialogDescription>
             </AlertDialogHeader>
             <AlertDialogFooter>
-              <AlertDialogCancel>Cancelar</AlertDialogCancel>
-              <AlertDialogAction onClick={handleDeleteAppointmentClick}>
+              <AlertDialogCancel className="cursor-pointer">
+                Cancelar
+              </AlertDialogCancel>
+              <AlertDialogAction
+                className="cursor-pointer"
+                onClick={handleDeleteAppointmentClick}
+              >
                 Deletar
               </AlertDialogAction>
             </AlertDialogFooter>
