@@ -1,31 +1,42 @@
 "use server";
 
 import { eq } from "drizzle-orm";
+import { revalidatePath } from "next/cache";
+import { headers } from "next/headers";
 import { z } from "zod";
 
 import { db } from "@/db";
 import { appointmentsTable } from "@/db/schema";
+import { auth } from "@/lib/auth";
+import { actionClient } from "@/lib/safe-action";
 
 const updateStatusSchema = z.object({
   agendamentoId: z.string(),
   status: z.enum(["confirmado", "cancelado"]),
 });
 
-export async function updateAgendamentoStatus(
-  input: z.infer<typeof updateStatusSchema>,
-) {
-  const parsed = updateStatusSchema.safeParse(input);
+export const updateAgendamentoStatus = actionClient
+  .schema(updateStatusSchema)
+  .action(async ({ parsedInput }) => {
+    const session = await auth.api.getSession({
+      headers: await headers(),
+    });
+    if (!session?.user) {
+      throw new Error("Unauthorized");
+    }
+    const appointment = await db.query.appointmentsTable.findFirst({
+      where: eq(appointmentsTable.id, parsedInput.agendamentoId),
+    });
+    if (!appointment) {
+      throw new Error("Agendamento não encontrado");
+    }
+    if (appointment.salonId !== session.user.salon?.id) {
+      throw new Error("Agendamento não encontrado");
+    }
+    await db
+      .update(appointmentsTable)
+      .set({ status: parsedInput.status, updatedAt: new Date() })
+      .where(eq(appointmentsTable.id, parsedInput.agendamentoId));
 
-  if (!parsed.success) {
-    throw new Error("Dados inválidos.");
-  }
-
-  const { agendamentoId, status } = parsed.data;
-
-  await db
-    .update(appointmentsTable)
-    .set({ status })
-    .where(eq(appointmentsTable.id, agendamentoId));
-
-  return { success: true };
-}
+    revalidatePath("/agendamentos");
+  });
