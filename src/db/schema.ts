@@ -189,6 +189,11 @@ export const clientsTableRelations = relations(
   }),
 );
 
+export const appointmentStatusEnum = pgEnum("appointment_status", [
+  "confirmado",
+  "cancelado",
+]);
+
 // Agendamentos
 export const appointmentsTable = pgTable("appointments", {
   id: text("id").primaryKey(),
@@ -202,6 +207,9 @@ export const appointmentsTable = pgTable("appointments", {
   professionalId: text("professional_id")
     .notNull()
     .references(() => professionalsTable.id, { onDelete: "cascade" }),
+  appointmentPriceInCents: integer("appointment_price_in_cents").notNull(),
+  time: time("time").notNull(),
+  status: appointmentStatusEnum("status").notNull(),
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at")
     .defaultNow()

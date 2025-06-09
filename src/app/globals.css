@@ -1,6 +1,25 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 
+/* Botões do FullCalendar com Tailwind */
+.fc .fc-button {
+  @apply rounded-md border-0 bg-pink-500 px-3 py-1.5 text-sm text-white transition-colors;
+}
+
+.fc .fc-button:hover {
+  @apply bg-pink-600;
+}
+
+.fc .fc-button:disabled {
+  @apply cursor-not-allowed bg-pink-300;
+}
+
+.fc .fc-button.fc-button-active {
+  background-color: #f9a8d4 !important; /* bg-pink-300 */
+  color: white !important;
+  border-color: transparent !important;
+}
+
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
